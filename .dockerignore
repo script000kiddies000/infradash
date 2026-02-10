@@ -1,0 +1,33 @@
+# Ignore everything by default
+*
+
+# Allow specific files and directories
+!Dockerfile
+!docker-compose.yml
+!entrypoint.sh
+!package.json
+!next.config.js
+!tsconfig.json
+!.env
+!README.md
+
+# Allow source directories
+!app/
+!app/**
+!components/
+!components/**
+!lib/
+!lib/**
+!prisma/
+!prisma/**
+!public/
+!public/**
+
+# Exclude generated and lock files
+.next/
+node_modules/
+data/
+*.db
+*.db-journal
+package-lock.json
+npm-debug.log*
