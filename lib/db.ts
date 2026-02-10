@@ -62,18 +62,39 @@ class JsonDB {
     }
 
     private load(): DbData {
+        const defaultValue = {
+            users: [],
+            hosts: [
+                {
+                    id: 'example-host-1',
+                    name: 'Home Router',
+                    ipAddress: '192.168.1.1',
+                    description: 'Main Gateway',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                }
+            ],
+            services: [],
+            categories: [],
+            serviceTemplates: []
+        };
+
         try {
-            const content = fs.readFileSync(this.filePath, 'utf-8');
+            if (!fs.existsSync(this.filePath)) return defaultValue;
+
+            const content = fs.readFileSync(this.filePath, 'utf-8').trim();
+            if (!content) {
+                // If file is empty, save default and return it
+                this.save(defaultValue);
+                return defaultValue;
+            }
+
             return JSON.parse(content);
         } catch (error) {
-            console.error('Error loading database:', error);
-            return {
-                users: [],
-                hosts: [],
-                services: [],
-                categories: [],
-                serviceTemplates: []
-            };
+            console.error('Error loading database, resetting to default:', error);
+            // On syntax error, try to save default to fix the file
+            try { this.save(defaultValue); } catch (e) { }
+            return defaultValue;
         }
     }
 
